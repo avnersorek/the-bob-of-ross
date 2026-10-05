@@ -1258,5 +1258,5 @@ All four are executed together as the official MVP sign-off in M6.
 - **Open question 2 (real segment timestamps):** resolved by the above; the
   timings are transcript-derived and should still get a final pass against the
   actual video during M2.
-- **Open question 1 (embedding allowed?):** still to verify for the new id —
-  check `oh5p5f5_-7A` for IFrame embed permission in M2.
+- **Open question 1 (embedding allowed?):** RESOLVED — owner confirmed the
+  video `oh5p5f5_-7A` supports embedding (2026-10-05). No fallback needed.
