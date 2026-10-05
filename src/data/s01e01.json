@@ -1,0 +1,275 @@
+{
+  "videoId": "oh5p5f5_-7A",
+  "title": "A Walk in the Woods",
+  "version": 1,
+  "timeline": [
+    {
+      "startTime": 0,
+      "endTime": 131,
+      "tool": {
+        "name": "Intro — no paint",
+        "color": "#FFFFFF",
+        "type": "liquid_white_base",
+        "opacity": 0,
+        "size": 60,
+        "blendMode": "source-over"
+      },
+      "bobDialogue": "Hi, I'm Bob Ross, and for the next 13 weeks I'll be your host. Let's go over the equipment and the eight colors we'll use every week."
+    },
+    {
+      "startTime": 131,
+      "endTime": 218,
+      "tool": {
+        "name": "2½-inch Brush",
+        "color": "#F7F7F2",
+        "type": "liquid_white_base",
+        "opacity": 0.1,
+        "size": 60,
+        "blendMode": "source-over"
+      },
+      "bobDialogue": "We start with a big brush and cover the canvas with a thin, even coat of magic white — then long strokes back and forth so it's even all the way across."
+    },
+    {
+      "startTime": 218,
+      "endTime": 252,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#E8DC7A",
+        "type": "sky_wash",
+        "opacity": 0.4,
+        "size": 50,
+        "blendMode": "multiply"
+      },
+      "bobDialogue": "A little bit of Cad yellow with the least touch of Phthalo green — begin making little X's, just like so."
+    },
+    {
+      "startTime": 252,
+      "endTime": 292,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#2C5282",
+        "type": "sky_wash",
+        "opacity": 0.45,
+        "size": 50,
+        "blendMode": "multiply"
+      },
+      "bobDialogue": "Without cleaning the brush, we go right into some Prussian blue — making criss-cross little X strokes. Already we're beginning to have a light source."
+    },
+    {
+      "startTime": 292,
+      "endTime": 368,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#E2E8F0",
+        "type": "sky_wash",
+        "opacity": 0.35,
+        "size": 55,
+        "blendMode": "screen"
+      },
+      "bobDialogue": "With a nice clean brush, add just a little Titanium white in the center and work outward — blend until we have a nice blue sky."
+    },
+    {
+      "startTime": 368,
+      "endTime": 490,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#5C2D4A",
+        "type": "pine_tree_foliage",
+        "opacity": 0.85,
+        "size": 25,
+        "blendMode": "source-over",
+        "spacing": 0.35,
+        "flow": 0.8
+      },
+      "bobDialogue": "A little Alizarin crimson and a touch of Prussian blue — just a little blue, it's a hundred times stronger. Bend the brush and push in basic tree shapes."
+    },
+    {
+      "startTime": 490,
+      "endTime": 555,
+      "tool": {
+        "name": "1-inch Brush",
+        "color": "#4A3728",
+        "type": "pine_tree_foliage",
+        "opacity": 0.9,
+        "size": 12,
+        "blendMode": "source-over",
+        "spacing": 0.3,
+        "flow": 0.9
+      },
+      "bobDialogue": "A little Van Dyke brown — lay in some basic trunks, and maybe a little limb right here, some little sticks and twigs."
+    },
+    {
+      "startTime": 555,
+      "endTime": 599,
+      "tool": {
+        "name": "1-inch Brush",
+        "color": "#B9A48B",
+        "type": "pine_tree_foliage",
+        "opacity": 0.7,
+        "size": 10,
+        "blendMode": "screen",
+        "spacing": 0.3,
+        "flow": 0.7
+      },
+      "bobDialogue": "Now we highlight these — a little white and a touch of brown mixed together. Remember where your light source is."
+    },
+    {
+      "startTime": 599,
+      "endTime": 881,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#4F8A3D",
+        "type": "pine_tree_foliage",
+        "opacity": 0.85,
+        "size": 30,
+        "blendMode": "source-over",
+        "spacing": 0.35,
+        "flow": 0.8
+      },
+      "bobDialogue": "Now comes the fun — a little Phthalo green and a little yellow, load the brush full of paint, and push thousands of little leaves. Thin paint sticks to thick paint."
+    },
+    {
+      "startTime": 881,
+      "endTime": 949,
+      "tool": {
+        "name": "Palette Knife",
+        "color": "#4A3728",
+        "type": "mountain_snow",
+        "opacity": 1,
+        "size": 15,
+        "breakTexture": true,
+        "blendMode": "source-over"
+      },
+      "bobDialogue": "Take a little Van Dyke brown and build us a happy little path — just let it wander right down through here."
+    },
+    {
+      "startTime": 949,
+      "endTime": 1025,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#2F5D3A",
+        "type": "pine_tree_foliage",
+        "opacity": 0.85,
+        "size": 22,
+        "blendMode": "source-over",
+        "spacing": 0.3,
+        "flow": 0.8
+      },
+      "bobDialogue": "To set the path down into the painting, add some bushes that project up over the path here and there — it makes it literally drop right in."
+    },
+    {
+      "startTime": 1025,
+      "endTime": 1081,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#2C5282",
+        "type": "sky_wash",
+        "opacity": 0.5,
+        "size": 40,
+        "blendMode": "multiply"
+      },
+      "bobDialogue": "Maybe it rained last night. Take a little touch of Prussian blue and pull downward — just pull downward, to give it a watery effect."
+    },
+    {
+      "startTime": 1081,
+      "endTime": 1125,
+      "tool": {
+        "name": "Palette Knife",
+        "color": "#E2E8F0",
+        "type": "mountain_snow",
+        "opacity": 0.8,
+        "size": 12,
+        "breakTexture": true,
+        "blendMode": "screen"
+      },
+      "bobDialogue": "A little touch of Titanium white on your brush, pull down — it'll give it sort of a sheen. You can overdo this part very easily."
+    },
+    {
+      "startTime": 1125,
+      "endTime": 1233,
+      "tool": {
+        "name": "Palette Knife",
+        "color": "#4A3728",
+        "type": "mountain_snow",
+        "opacity": 1,
+        "size": 14,
+        "breakTexture": true,
+        "blendMode": "source-over"
+      },
+      "bobDialogue": "A little more Van Dyke brown — make little puddles out of this, and lay a brown-and-white highlight on there."
+    },
+    {
+      "startTime": 1233,
+      "endTime": 1306,
+      "tool": {
+        "name": "Palette Knife",
+        "color": "#E2E8F0",
+        "type": "mountain_snow",
+        "opacity": 0.9,
+        "size": 8,
+        "breakTexture": true,
+        "blendMode": "screen"
+      },
+      "bobDialogue": "Take a little thin white paint and put some little water lines back in — literally cut right into the canvas with it. And cut a few little sticks here and there."
+    },
+    {
+      "startTime": 1306,
+      "endTime": 1409,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#3E5E3A",
+        "type": "pine_tree_foliage",
+        "opacity": 0.85,
+        "size": 20,
+        "blendMode": "source-over",
+        "spacing": 0.3,
+        "flow": 0.8
+      },
+      "bobDialogue": "Put some bushes and stuff right down here on the grass — back to the Van Dyke brown and a little bit of white, then drop the bushes right in."
+    },
+    {
+      "startTime": 1409,
+      "endTime": 1456,
+      "tool": {
+        "name": "1-inch Brush",
+        "color": "#4A3728",
+        "type": "pine_tree_foliage",
+        "opacity": 0.9,
+        "size": 14,
+        "blendMode": "source-over",
+        "spacing": 0.3,
+        "flow": 0.9
+      },
+      "bobDialogue": "Let's have a happy little tree right in here. Start with the Van Dyke brown and make his little trunk — turn him out to give him little foots to stand on."
+    },
+    {
+      "startTime": 1456,
+      "endTime": 1616,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#6B2D5C",
+        "type": "pine_tree_foliage",
+        "opacity": 0.85,
+        "size": 24,
+        "blendMode": "source-over",
+        "spacing": 0.35,
+        "flow": 0.8
+      },
+      "bobDialogue": "Give him some little leaves — some more Alizarin crimson and a touch of Prussian blue. We need dark in order to show light. I used a touch more Permanent red so he'll stand out."
+    },
+    {
+      "startTime": 1616,
+      "endTime": 1665,
+      "tool": {
+        "name": "Script Liner",
+        "color": "#C53030",
+        "type": "mountain_snow",
+        "opacity": 1,
+        "size": 4,
+        "breakTexture": false,
+        "blendMode": "source-over"
+      },
+      "bobDialogue": "I sign the painting with a script liner brush, a little bit of oil, and red paint. Until next week, happy painting, from all of us here."
+    }
+  ]
+}

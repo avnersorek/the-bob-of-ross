@@ -1242,3 +1242,21 @@ quadratically; whether `OffscreenCanvas` is available on all target browsers
 | Liquid, smooth, relaxing feel | §11 row 4 (p95 < 16.6 ms) | M4 + M6 |
 
 All four are executed together as the official MVP sign-off in M6.
+
+---
+
+## Addendum — 2026-10-05: canonical video + real script
+
+- **Canonical video id:** `oh5p5f5_-7A` ("A Walk in the Woods") —
+  https://www.youtube.com/watch?v=oh5p5f5_-7A. Supersedes the placeholder
+  `OH94B9B8zDk` from the brief.
+- **Transcript archived:** `docs/bob-transcript-s01e01.txt` (chaptered,
+  with per-line timestamps).
+- **Script authored:** `src/data/s01e01.json` — 20 contiguous, non-overlapping
+  segments covering 0–1665 s, derived from the transcript's real timings and
+  mapped to the four MVP tool types (plus blend modes + tool-specific knobs).
+- **Open question 2 (real segment timestamps):** resolved by the above; the
+  timings are transcript-derived and should still get a final pass against the
+  actual video during M2.
+- **Open question 1 (embedding allowed?):** still to verify for the new id —
+  check `oh5p5f5_-7A` for IFrame embed permission in M2.

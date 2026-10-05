@@ -10,7 +10,16 @@ driven by a time-coded JSON script.
 ## Docs
 
 - [`docs/INITIAL_SPEC.md`](docs/INITIAL_SPEC.md) — original project brief
-- `docs/IMPLEMENTATION_PLAN.md` — detailed plan (generated)
+- [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md) — detailed plan (generated)
+- [`docs/bob-transcript-s01e01.txt`](docs/bob-transcript-s01e01.txt) — episode transcript (source for timestamps)
+- [`src/data/s01e01.json`](src/data/s01e01.json) — authored tool script
+
+## Episode
+
+- **Video:** "A Walk in the Woods" — https://www.youtube.com/watch?v=oh5p5f5_-7A
+- **Script:** 20 time-coded segments derived from the episode transcript
+  (canvas prep → sky → trees → trunks → foliage → path → puddles → water
+  lines → final tree → signature)
 
 ## Concept
 
