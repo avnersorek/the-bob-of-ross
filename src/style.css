@@ -31,8 +31,10 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: #2e3340;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.6);
 }
 
 .floating {
@@ -49,10 +51,11 @@ body {
 }
 
 #video-window {
-  bottom: 20px;
-  right: 20px;
-  width: 360px;
+  bottom: 24px;
+  right: 24px;
+  width: min(360px, 40vw);
   max-width: 90vw;
+  overflow: hidden;
 }
 
 #video-header {
@@ -61,10 +64,24 @@ body {
   border-bottom: 1px solid var(--border-color);
   user-select: none;
   font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 #video-container {
   aspect-ratio: 16/9;
+  width: 100%;
+}
+
+iframe#video-player,
+#video-container iframe {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  display: block;
 }
 
 #control-bar {
@@ -72,25 +89,47 @@ body {
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--panel-bg);
+  background: rgba(30, 33, 42, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   padding: 8px 12px;
   display: flex;
   gap: 8px;
+  z-index: 10;
+}
+
+#control-bar button {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#control-bar button:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 #tool-hud {
   position: absolute;
   bottom: 20px;
   left: 20px;
-  background: var(--panel-bg);
+  background: rgba(30, 33, 42, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 14px;
+  z-index: 10;
+  max-width: min(480px, 60vw);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #toast-container {

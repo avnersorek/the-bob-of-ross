@@ -1,19 +1,18 @@
 import type { EventBus } from "../core/state/eventBus";
+import type { ToolConfig } from "../data/script.schema";
 
 export class ToolHud {
   private element: HTMLDivElement;
 
-  constructor(container: HTMLElement, private bus: EventBus) {
-    this.element = document.createElement("div");
-    this.element.id = "tool-hud";
-    container.appendChild(this.element);
-    this.bus.on("tool:change", () => this.update());
+  constructor(_container: HTMLElement, bus: EventBus) {
+    this.element = document.getElementById("tool-hud") as HTMLDivElement;
+    this.element.classList.remove("hidden");
+    bus.on("tool:change", (payload) => this.update(payload.next as ToolConfig | null));
   }
 
-  update(tool: any = null): void {
-    if (tool?.next) {
-      const t = tool.next;
-      this.element.textContent = `Tool: ${t.name} | Color: ${t.color} | Mode: ${t.type}`;
+  update(tool: ToolConfig | null = null): void {
+    if (tool) {
+      this.element.textContent = `Tool: ${tool.name} | Color: ${tool.color} | Mode: ${tool.type}`;
     } else {
       this.element.textContent = "Tool: —";
     }

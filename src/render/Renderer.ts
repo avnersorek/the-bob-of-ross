@@ -1,4 +1,5 @@
 export class Renderer {
+  static readonly CANVAS_BG = "#2e3340";
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private baseCanvas: HTMLCanvasElement;
@@ -44,6 +45,8 @@ export class Renderer {
     this.baseCanvas.height = cssH * this.dpr;
     this.baseCtx.setTransform(1, 0, 0, 1, 0, 0);
     this.baseCtx.scale(this.dpr, this.dpr);
+    this.baseCtx.fillStyle = Renderer.CANVAS_BG;
+    this.baseCtx.fillRect(0, 0, this.width, this.height);
   }
 
   render(): void {
@@ -52,6 +55,7 @@ export class Renderer {
   }
 
   clear(): void {
-    this.baseCtx.clearRect(0, 0, this.width, this.height);
+    this.baseCtx.fillStyle = Renderer.CANVAS_BG;
+    this.baseCtx.fillRect(0, 0, this.width, this.height);
   }
 }

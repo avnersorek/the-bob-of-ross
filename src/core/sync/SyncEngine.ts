@@ -82,13 +82,13 @@ export class SyncEngine {
       this.state.timeToNext = Math.max(0, this.store.duration - t);
     }
 
-    if (changed || this.state.activeTool !== activeSegment.tool) {
+    if (this.state.syncEnabled && (changed || this.state.activeTool !== activeSegment.tool)) {
       this.state.activeTool = activeSegment.tool;
       this.bus.emit("tool:change", { prev: this.prevTool, next: activeSegment.tool });
       this.prevTool = activeSegment.tool;
     }
 
-    if (this.state.timeToNext <= BOUNDARY_BAND_MS && nextSeg) {
+    if (this.state.syncEnabled && this.state.timeToNext <= BOUNDARY_BAND_MS && nextSeg) {
       try {
         this.brushes.forTool(nextSeg.tool).prepare(nextSeg.tool);
       } catch (e) {
