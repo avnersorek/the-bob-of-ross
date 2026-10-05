@@ -8,3 +8,4 @@ build/
 .cache/
 .vite/
 coverage/
+docs/qa/

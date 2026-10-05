@@ -1,0 +1,18 @@
+{
+  "videoId": "",
+  "title": "Bad Episode",
+  "timeline": [
+    {
+      "startTime": 200,
+      "endTime": 100,
+      "tool": {
+        "name": "",
+        "color": "not-a-hex",
+        "type": "invalid_type",
+        "opacity": 2,
+        "size": -5,
+        "blendMode": "invalid_mode"
+      }
+    }
+  ]
+}

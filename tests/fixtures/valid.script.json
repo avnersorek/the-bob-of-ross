@@ -1,0 +1,58 @@
+{
+  "videoId": "OH94B9B8zDk",
+  "title": "Mock Episode",
+  "version": 1,
+  "timeline": [
+    {
+      "startTime": 0,
+      "endTime": 120,
+      "tool": {
+        "name": "2-inch Brush",
+        "color": "#2C5282",
+        "type": "sky_wash",
+        "opacity": 0.3,
+        "size": 50,
+        "blendMode": "multiply"
+      }
+    },
+    {
+      "startTime": 120,
+      "endTime": 240,
+      "tool": {
+        "name": "Fan Brush",
+        "color": "#4F8A3D",
+        "type": "pine_tree_foliage",
+        "opacity": 0.8,
+        "size": 25,
+        "blendMode": "source-over",
+        "spacing": 0.35,
+        "flow": 0.8
+      }
+    },
+    {
+      "startTime": 240,
+      "endTime": 420,
+      "tool": {
+        "name": "Palette Knife",
+        "color": "#E2E8F0",
+        "type": "mountain_snow",
+        "opacity": 0.9,
+        "size": 12,
+        "blendMode": "screen",
+        "breakTexture": true
+      }
+    },
+    {
+      "startTime": 420,
+      "endTime": 600,
+      "tool": {
+        "name": "2½-inch Brush",
+        "color": "#F7F7F2",
+        "type": "liquid_white_base",
+        "opacity": 0.1,
+        "size": 60,
+        "blendMode": "source-over"
+      }
+    }
+  ]
+}
