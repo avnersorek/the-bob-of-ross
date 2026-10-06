@@ -1,4 +1,5 @@
 import type { EventBus } from "../core/state/eventBus";
+import { makeDraggable } from "./drag";
 
 export class VideoWindow {
   private element: HTMLDivElement;
@@ -9,6 +10,7 @@ export class VideoWindow {
     this.element = document.getElementById("video-window") as HTMLDivElement;
     this.container = document.getElementById("video-container") as HTMLDivElement;
     this.header = document.getElementById("video-header") as HTMLDivElement;
+    makeDraggable(this.element, this.header);
   }
 
   setContainerId(id: string): void {

@@ -9,8 +9,8 @@ export interface Particle {
   color: string;
 }
 
-const MAX_PARTICLES = 256;
-const LIFE_MS = 420;
+const MAX_PARTICLES = 160;
+const LIFE_MS = 520;
 
 export class ParticleSystem {
   private list: Particle[] = [];
@@ -60,10 +60,10 @@ export class ParticleSystem {
     ctx.save();
     for (const p of this.list) {
       const t = Math.min(1, p.life / p.maxLife);
-      ctx.globalAlpha = Math.max(0, 0.35 * (1 - t));
+      ctx.globalAlpha = Math.max(0, 0.22 * (1 - t));
       ctx.fillStyle = p.color;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size * (0.4 + t * 1.6), 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, Math.max(0.5, p.size * (0.5 + t * 1.1)), 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();

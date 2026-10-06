@@ -1,5 +1,6 @@
 type EventMap = {
   "tool:change": { prev: unknown; next: unknown };
+  "segment:change": { index: number; segment: unknown; next: unknown; timeToNext: number };
   "player:state": { state: string };
   "player:seek": { time: number };
   "player:ready": {};

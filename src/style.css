@@ -63,7 +63,8 @@ body {
 
 #video-header {
   padding: 8px 12px;
-  cursor: move;
+  cursor: grab;
+  touch-action: none;
   border-bottom: 1px solid var(--border-color);
   user-select: none;
   font-size: 14px;
@@ -72,6 +73,10 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+}
+
+#video-header:active {
+  cursor: grabbing;
 }
 
 #video-container {
@@ -133,6 +138,56 @@ iframe#video-player,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.hud-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  vertical-align: -1px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  margin: 0 4px 0 2px;
+}
+
+#now-next {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: rgba(20, 22, 28, 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  z-index: 10;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: min(340px, 40vw);
+}
+
+.now-next-line {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.now-next-rest {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.now-next-upcoming {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 11px;
+}
+
+.now-next-label {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  flex: none;
 }
 
 #toast-container {

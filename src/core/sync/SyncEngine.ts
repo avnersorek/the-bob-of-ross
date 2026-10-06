@@ -12,6 +12,7 @@ export class SyncEngine {
   private lastTime = 0;
   private frameDt = 16.67;
   private pendingSeek = false;
+  private forceSegmentEmit = false;
   private activeIdx = -1;
   private prevTool: any = null;
   private rafId = 0;
@@ -34,6 +35,7 @@ export class SyncEngine {
 
   seek(_t: number): void {
     this.pendingSeek = true;
+    this.forceSegmentEmit = true;
     this.lastEvalAt = 0;
   }
 
@@ -49,8 +51,12 @@ export class SyncEngine {
 
     if (!shouldEval) return;
 
+    this.evaluateNow();
+  };
+
+  evaluateNow(): void {
     this.pendingSeek = false;
-    this.lastEvalAt = now;
+    this.lastEvalAt = typeof performance !== "undefined" ? performance.now() : Date.now();
 
     const t = this.timeSource.getCurrentTime();
     const prevT = this.lastTime;
@@ -67,7 +73,8 @@ export class SyncEngine {
     if (this.store.segments.length === 0) return;
 
     const segIdx = this.store.indexAt(t);
-    const changed = segIdx !== this.activeIdx;
+    const changed = segIdx !== this.activeIdx || this.forceSegmentEmit;
+    this.forceSegmentEmit = false;
 
     this.activeIdx = segIdx;
     const activeSegment = this.store.segments[segIdx]!;
@@ -88,6 +95,15 @@ export class SyncEngine {
       this.prevTool = activeSegment.tool;
     }
 
+    if (changed) {
+      this.bus.emit("segment:change", {
+        index: segIdx,
+        segment: activeSegment,
+        next: nextSeg,
+        timeToNext: this.state.timeToNext,
+      });
+    }
+
     if (this.state.syncEnabled && this.state.timeToNext <= BOUNDARY_BAND_MS && nextSeg) {
       try {
         this.brushes.forTool(nextSeg.tool).prepare(nextSeg.tool);
@@ -95,5 +111,5 @@ export class SyncEngine {
         // ignore
       }
     }
-  };
+  }
 }

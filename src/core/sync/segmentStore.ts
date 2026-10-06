@@ -1,5 +1,10 @@
 import type { Segment, ToolScript } from "../../data/script.schema";
 
+export interface LookaheadSegment {
+  segment: Segment;
+  inMs: number;
+}
+
 export class SegmentStore {
   readonly segments: Segment[];
   readonly duration: number;
@@ -8,6 +13,28 @@ export class SegmentStore {
     const sorted = [...script.timeline].sort((a, b) => a.startTime - b.startTime);
     this.segments = sorted;
     this.duration = sorted.length > 0 ? sorted[sorted.length - 1]!.endTime : 0;
+  }
+
+  segmentAt(time: number): Segment | null {
+    const i = this.indexAt(time);
+    if (i < 0 || i >= this.segments.length) return null;
+    return this.segments[i]!;
+  }
+
+  nextSegment(time: number): LookaheadSegment | null {
+    return this.nextSegments(time, 1)[0] ?? null;
+  }
+
+  nextSegments(time: number, count = 2): LookaheadSegment[] {
+    const i = this.indexAt(time);
+    if (i < 0) return [];
+    const out: LookaheadSegment[] = [];
+    for (let k = 1; k <= count; k++) {
+      const seg = this.segments[i + k];
+      if (!seg) break;
+      out.push({ segment: seg, inMs: Math.max(0, (seg.startTime - time) * 1000) });
+    }
+    return out;
   }
 
   indexAt(time: number): number {

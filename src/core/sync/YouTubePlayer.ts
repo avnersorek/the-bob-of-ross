@@ -21,6 +21,7 @@ export class YouTubePlayer implements TimeSource {
   private state: PlayerState = "unstarted";
   private lastTime = 0;
   private lastTimeAt = 0;
+  private forceTimeValue: number | null = null;
 
   constructor(
     private containerId: string,
@@ -74,6 +75,9 @@ export class YouTubePlayer implements TimeSource {
   }
 
   getCurrentTime(): number {
+    if (this.forceTimeValue !== null) {
+      return this.forceTimeValue;
+    }
     try {
       return this.player?.getCurrentTime() || 0;
     } catch {
@@ -94,6 +98,9 @@ export class YouTubePlayer implements TimeSource {
   }
 
   isAdvancing(): boolean {
+    if (this.forceTimeValue !== null) {
+      return false;
+    }
     const now = performance.now();
     const t = this.getCurrentTime();
     if (this.state === "playing" && t > this.lastTime + 0.01) {
@@ -118,6 +125,14 @@ export class YouTubePlayer implements TimeSource {
   seekTo(seconds: number): void {
     this.player?.seekTo(seconds, true);
     this.bus.emit("player:seek", { time: seconds });
+  }
+
+  setForceTime(t: number): void {
+    this.forceTimeValue = t;
+  }
+
+  clearForceTime(): void {
+    this.forceTimeValue = null;
   }
 
   mute(): void {

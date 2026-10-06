@@ -11,6 +11,7 @@ import { PointerPipeline } from "./brush/pointer";
 import { Renderer } from "./render/Renderer";
 import { ControlBar } from "./ui/ControlBar";
 import { ToolHud } from "./ui/ToolHud";
+import { NowNextPanel } from "./ui/NowNextPanel";
 import { VideoWindow } from "./ui/VideoWindow";
 
 function defaultTool() {
@@ -76,7 +77,8 @@ async function init() {
         else player.unMute();
       },
     });
-    new ToolHud(app, bus);
+    new ToolHud(app, bus, state, fallbackTool);
+    new NowNextPanel(store, state, bus);
 
     bus.on("brush:clear", () => {
       engine.clear();
@@ -127,8 +129,24 @@ async function init() {
         syncEngine.seek(0);
       },
       seek(t: number) {
+        player.clearForceTime();
         player.seekTo(t);
         syncEngine.seek(t);
+      },
+      setTime(t: number) {
+        player.setForceTime(t);
+        syncEngine.seek(t);
+        syncEngine.evaluateNow();
+      },
+      getState() {
+        return {
+          time: state.currentTime,
+          index: state.activeSegmentIndex,
+          segment: state.activeSegment,
+          nextSegment: state.nextSegment,
+          timeToNext: state.timeToNext,
+          activeTool: state.activeTool,
+        };
       },
       clear() {
         bus.emit("brush:clear", {});

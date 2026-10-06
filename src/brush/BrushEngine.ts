@@ -78,7 +78,7 @@ export class PaintEngine implements BrushEngine, RenderTarget {
     this.painted = true;
     if (this.spawnParticlesAt) {
       const last = samples[samples.length - 1]!;
-      this.spawnParticlesAt(last.x, last.y, this.strokeTool.color, Math.min(5, 2 + samples.length));
+      this.spawnParticlesAt(last.x, last.y, this.strokeTool.color, Math.min(3, 1 + samples.length));
     }
   }
 
