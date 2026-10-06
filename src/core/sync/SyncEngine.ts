@@ -57,8 +57,10 @@ export class SyncEngine {
   evaluateNow(): void {
     this.pendingSeek = false;
     this.lastEvalAt = typeof performance !== "undefined" ? performance.now() : Date.now();
+    this.evaluateAt(this.timeSource.getCurrentTime());
+  }
 
-    const t = this.timeSource.getCurrentTime();
+  evaluateAt(t: number): void {
     const prevT = this.lastTime;
     this.lastTime = t;
     this.state.currentTime = t;

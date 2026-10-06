@@ -22,6 +22,8 @@ export class YouTubePlayer implements TimeSource {
   private lastTime = 0;
   private lastTimeAt = 0;
   private forceTimeValue: number | null = null;
+  private seekHoldValue: number | null = null;
+  private seekHoldUntil = 0;
 
   constructor(
     private containerId: string,
@@ -48,6 +50,10 @@ export class YouTubePlayer implements TimeSource {
         controls: 0,
         modestbranding: 1,
         rel: 0,
+        iv_load_policy: 3,
+        disablekb: 1,
+        fs: 0,
+        playsinline: 1,
       },
       events: {
         onReady: () => {
@@ -78,11 +84,22 @@ export class YouTubePlayer implements TimeSource {
     if (this.forceTimeValue !== null) {
       return this.forceTimeValue;
     }
+    let actual = 0;
     try {
-      return this.player?.getCurrentTime() || 0;
+      actual = this.player?.getCurrentTime() || 0;
     } catch {
-      return 0;
+      actual = 0;
     }
+    if (this.seekHoldValue !== null) {
+      const converged = Math.abs(actual - this.seekHoldValue) < 1;
+      const expired = typeof performance === "undefined" || performance.now() > this.seekHoldUntil;
+      if (converged || expired) {
+        this.seekHoldValue = null;
+      } else {
+        return this.seekHoldValue;
+      }
+    }
+    return actual;
   }
 
   getDuration(): number {
@@ -123,12 +140,17 @@ export class YouTubePlayer implements TimeSource {
   }
 
   seekTo(seconds: number): void {
+    this.seekHoldValue = seconds;
+    this.seekHoldUntil =
+      (typeof performance !== "undefined" ? performance.now() : Date.now()) + 2000;
+    this.forceTimeValue = null;
     this.player?.seekTo(seconds, true);
     this.bus.emit("player:seek", { time: seconds });
   }
 
   setForceTime(t: number): void {
     this.forceTimeValue = t;
+    this.seekHoldValue = null;
   }
 
   clearForceTime(): void {

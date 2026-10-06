@@ -13,6 +13,7 @@ import { ControlBar } from "./ui/ControlBar";
 import { ToolHud } from "./ui/ToolHud";
 import { NowNextPanel } from "./ui/NowNextPanel";
 import { VideoWindow } from "./ui/VideoWindow";
+import { VideoControls } from "./ui/VideoControls";
 
 function defaultTool() {
   return {
@@ -57,6 +58,8 @@ async function init() {
 
     const syncEngine = new SyncEngine(player, store, bus, state, brushes);
     syncEngine.start();
+
+    const videoControls = new VideoControls(player, syncEngine, bus);
 
     new ControlBar(app, bus, {
       onClear: () => bus.emit("brush:clear", {}),
@@ -129,9 +132,7 @@ async function init() {
         syncEngine.seek(0);
       },
       seek(t: number) {
-        player.clearForceTime();
-        player.seekTo(t);
-        syncEngine.seek(t);
+        videoControls.seekTo(t);
       },
       setTime(t: number) {
         player.setForceTime(t);
@@ -156,6 +157,16 @@ async function init() {
       },
     };
     (window as unknown as { __bob: unknown }).__bob = bob;
+    (window as unknown as { __bobSeek: unknown }).__bobSeek = (t: number) => {
+      bob.seek(t);
+      return {
+        time: player.getCurrentTime(),
+        duration: player.getDuration(),
+        index: state.activeSegmentIndex,
+        tool: state.activeTool?.name ?? null,
+        color: state.activeTool?.color ?? null,
+      };
+    };
 
     const query = new URLSearchParams(window.location.search);
     const pin = query.get("pin");
