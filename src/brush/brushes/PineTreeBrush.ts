@@ -53,19 +53,22 @@ export class PineTreeBrush implements Brush {
 
   private stampCluster(ctx: CanvasRenderingContext2D, x: number, y: number, axis: number): void {
     const tool = this.tool!;
-    const n = Math.round(lerp(7, 11, clamp(tool.size / 30, 0, 1)));
-    const width = Math.max(1, tool.size * 0.04);
+    const n = Math.round(lerp(7, 12, clamp(tool.size / 30, 0, 1)));
+    const width = Math.max(1, tool.size * 0.05);
     const rand = mulberry32((this.seedBase ^ (this.sampleIndex * 2654435761)) >>> 0);
+    const perpJit = tool.size * 0.22 * (rand() - 0.5);
+    const cx = x + Math.cos(axis + Math.PI / 2) * perpJit;
+    const cy = y + Math.sin(axis + Math.PI / 2) * perpJit;
     for (let k = 0; k < n; k++) {
-      const dir = axis + (k / n) * 1.2 - 0.6 + randRange(rand, -0.08, 0.08);
-      const len = tool.size * (0.6 + 0.5 * rand());
-      const alpha = tool.opacity * (0.7 + 0.3 * rand());
+      const dir = axis + (k / n - 0.5) * 2.4 + randRange(rand, -0.12, 0.12);
+      const len = tool.size * (0.5 + 0.5 * rand());
+      const alpha = tool.opacity * (0.55 + 0.35 * rand());
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.lineWidth = width;
       ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x + Math.cos(dir) * len, y + Math.sin(dir) * len);
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(dir) * len, cy + Math.sin(dir) * len);
       ctx.stroke();
       ctx.restore();
     }

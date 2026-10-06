@@ -11,7 +11,7 @@ export interface RenderTarget {
 }
 
 export class Renderer {
-  static readonly CANVAS_BG = "#2e3340";
+  static readonly CANVAS_BG = "#e9e4d8";
   private ctx: CanvasRenderingContext2D;
   private compositor = new Compositor();
   private cursor = new CursorRenderer();

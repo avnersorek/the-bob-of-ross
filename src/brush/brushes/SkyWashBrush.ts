@@ -12,14 +12,14 @@ export class SkyWashBrush implements Brush {
 
   prepare(tool: ToolConfig): void {
     if (tool.opacity === 0) return;
-    getSoftSprite(tool.color, tool.size * 0.7, "gaussian");
+    getSoftSprite(tool.color, tool.size * 1.4, "gaussian");
   }
 
   beginStroke(ctx: CanvasRenderingContext2D, context: BrushContext): void {
     const { tool, pos } = context;
     if (tool.opacity === 0) return;
     this.tool = tool;
-    this.radius = tool.size * 0.7;
+    this.radius = tool.size * 1.4;
     applyStrokeStyle(ctx, tool);
     const alpha = tool.opacity * flowOf(tool) * 1;
     this.stamp(ctx, pos.x, pos.y, 0, alpha, 0);
