@@ -83,6 +83,14 @@ async function init() {
     new ToolHud(app, bus, state, fallbackTool);
     new NowNextPanel(store, state, bus);
 
+    bus.on("nav:seek", ({ time }) => {
+      const wasPlaying = player.getState() === "playing";
+      videoControls.seekTo(time);
+      const now = player.getState();
+      if (wasPlaying && now === "paused") player.play();
+      if (!wasPlaying && now === "playing") player.pause();
+    });
+
     bus.on("brush:clear", () => {
       engine.clear();
       renderer.clear();

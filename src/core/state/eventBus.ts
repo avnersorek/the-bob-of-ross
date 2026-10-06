@@ -3,6 +3,7 @@ type EventMap = {
   "segment:change": { index: number; segment: unknown; next: unknown; timeToNext: number };
   "player:state": { state: string };
   "player:seek": { time: number };
+  "nav:seek": { time: number };
   "player:ready": {};
   "player:playing": {};
   "player:paused": {};

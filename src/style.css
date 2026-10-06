@@ -190,6 +190,28 @@ iframe#video-player,
   flex: none;
 }
 
+.now-next-jump {
+  background: none;
+  border: 0;
+  padding: 0 4px;
+  margin-left: -4px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.now-next-jump:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.now-next-jump:focus-visible {
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
 .video-controls {
   display: flex;
   flex-direction: column;
