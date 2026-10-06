@@ -53,7 +53,7 @@ async function init() {
       (x, y, color, count) => renderer.spawnParticles(x, y, color, count)
     );
     state.brushEngine = engine;
-    const pointer = new PointerPipeline(canvas, engine);
+    new PointerPipeline(canvas, engine);
 
     const syncEngine = new SyncEngine(player, store, bus, state, brushes);
     syncEngine.start();
@@ -171,8 +171,6 @@ async function init() {
       bus.on("player:ready", doSeek);
       window.setTimeout(doSeek, 800);
     }
-
-    void pointer;
   } catch (e) {
     console.error(e);
     bus.emit("script:error", { message: "Failed to load script" });

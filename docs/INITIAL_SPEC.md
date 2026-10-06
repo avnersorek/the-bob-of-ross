@@ -149,9 +149,3 @@ Implement custom stroke rendering logic based on the active tool `type`:
 4. The canvas feels liquid, highly responsive, smooth, and relaxing.
 
 ```
-
-***
-
-<Elicitation label="Refine brush physics specs for WebGL" query="Can you help me add specific WebGL shaders or brush physics algorithms to this prompt to make the painting look ultra-realistic?"/>
-
-```

@@ -88,8 +88,8 @@ moment. The result should feel effortless, "liquid," and relaxing.
   see below)
 - **Validation:** Zod
 - **Testing:** Vitest (unit), Playwright (optional smoke)
-- **Lint/format:** ESLint + Prettier; CI via GitHub Actions (deferred until
-  GitHub publication is authorized)
+- **Lint/format:** ESLint + Prettier; `npm run ci` runs lint + typecheck + test
+  + build (a GitHub Actions workflow can run the same steps)
 
 ### 2.2 Why Vite + Vanilla TS over React/Next.js
 
@@ -154,8 +154,8 @@ cleanly. (No CSS Modules needed given the tiny UI surface.)
 
 ## 3. Repository / File Structure
 
-Full target tree with per-file purpose. Paths are relative to the repo root
-(`/home/avner/projects/the-bob-of-ross`).
+Full target tree with per-file purpose. Paths are relative to the repository
+root.
 
 ```
 the-bob-of-ross/
@@ -1391,7 +1391,7 @@ milestone is done only when every box is checked on a clean checkout.
   - [ ] Zero P0/P1 bugs open; all M0–M5 acceptance boxes re-verified on a clean
         checkout at the release commit.
 
-### M7 — Release prep (deferred until GitHub publication authorized)
+### M7 — Release prep
 - **Deliver:** CI workflow, README, LICENSE.
 - **Acceptance:**
   - [ ] `npm run ci` (lint + typecheck + test + build) green on Node LTS.
@@ -1520,9 +1520,9 @@ on Chrome, Firefox, and one tablet.
 
 - **Local:** `npm run lint` (ESLint) + `npm run typecheck` (tsc --noEmit) +
   `npm test` (Vitest) + `npm run build` (Vite).
-- **CI:** `.github/workflows/ci.yml` runs the same four steps on push/PR. This
-  is authored in M0 but only enabled once GitHub publication is authorized
-  (out of scope for the MVP workstream itself).
+- **CI:** `npm run ci` runs the same four steps (lint + typecheck + test +
+  build) in one command; a `.github/workflows/ci.yml` can run it on push/PR
+  (not yet added to the repo).
 
 ### 12.4 Risks & mitigations
 
@@ -1597,11 +1597,11 @@ on Chrome, Firefox, and one tablet.
   announcements), offline/PWA packaging, and performance work for low-end
   mobile.
 
-### 13.4 Open-source publishing (gated)
+### 13.4 Open-source publishing
 
-- LICENSE selection, README/screenshots, and CI/CD are prepared in M7 but the
-  actual GitHub publication is explicitly deferred until the owner authorizes
-  it — this repo is not to be pushed in the MVP workstream.
+- LICENSE selection, README, and release hygiene (secrets/paths/gitignore
+  review) were prepared in M7; the repository is published on GitHub at
+  https://github.com/avnersorek/the-bob-of-ross.
 
 ---
 

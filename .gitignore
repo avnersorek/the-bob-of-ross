@@ -3,9 +3,24 @@ dist/
 build/
 .env
 .env.*
-.DS_Store
+!.env.example
+
+# QA screenshots / captured artifacts
+docs/qa/
+
+# logs & caches
 *.log
 .cache/
 .vite/
 coverage/
-docs/qa/
+.eslintcache
+*.tsbuildinfo
+
+# editor / OS cruft
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

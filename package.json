@@ -1,8 +1,33 @@
 {
   "name": "the-bob-of-ross",
   "version": "0.1.0",
+  "description": "Paint along with Bob Ross in real time: a YouTube-synced canvas that swaps brush, color, size and blend mode from a time-coded JSON script.",
   "private": true,
+  "license": "MIT",
+  "author": "Avner Sorek",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avnersorek/the-bob-of-ross.git"
+  },
+  "homepage": "https://github.com/avnersorek/the-bob-of-ross#readme",
+  "bugs": {
+    "url": "https://github.com/avnersorek/the-bob-of-ross/issues"
+  },
+  "keywords": [
+    "bob-ross",
+    "the-joy-of-painting",
+    "canvas",
+    "generative-art",
+    "creative-coding",
+    "youtube-iframe-api",
+    "typescript",
+    "vite",
+    "zod"
+  ],
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,7 +37,9 @@
     "lint": "eslint src tests --ext .ts",
     "lint:fix": "eslint src tests --ext .ts --fix",
     "format": "prettier --write src tests",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run lint && npm run typecheck && npm test && npm run build",
+    "screenshot": "node scripts/screenshot.mjs"
   },
   "dependencies": {
     "zod": "^3.23.8"
