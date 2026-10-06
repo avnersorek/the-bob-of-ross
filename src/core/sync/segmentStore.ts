@@ -14,7 +14,7 @@ export class SegmentStore {
     if (this.segments.length === 0) return -1;
     if (time <= this.segments[0]!.startTime) return 0;
     if (time >= this.duration) return this.segments.length - 1;
-    
+
     let left = 0;
     let right = this.segments.length - 1;
     while (left <= right) {

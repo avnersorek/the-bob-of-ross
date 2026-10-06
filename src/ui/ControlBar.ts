@@ -32,8 +32,12 @@ export class ControlBar {
       <button id="toggle-sync" type="button" aria-pressed="true">Sync: On</button>
       <button id="toggle-audio" type="button" aria-pressed="true">Audio: On</button>
     `;
-    this.element.querySelector<HTMLButtonElement>("#clear")!.addEventListener("click", handlers.onClear);
-    this.element.querySelector<HTMLButtonElement>("#save")!.addEventListener("click", handlers.onSave);
+    this.element
+      .querySelector<HTMLButtonElement>("#clear")!
+      .addEventListener("click", handlers.onClear);
+    this.element
+      .querySelector<HTMLButtonElement>("#save")!
+      .addEventListener("click", handlers.onSave);
     this.syncBtn = this.element.querySelector<HTMLButtonElement>("#toggle-sync")!;
     this.audioBtn = this.element.querySelector<HTMLButtonElement>("#toggle-audio")!;
     this.syncBtn.addEventListener("click", handlers.onToggleSync);

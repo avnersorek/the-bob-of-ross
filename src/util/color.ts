@@ -5,3 +5,8 @@ export function hexToRgb(hex: string): { r: number; g: number; b: number } {
   const b = parseInt(h.substr(4, 2), 16);
   return { r, g, b };
 }
+
+export function hexToRgba(hex: string, alpha: number): string {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}

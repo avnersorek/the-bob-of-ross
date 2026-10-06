@@ -22,7 +22,11 @@ export class YouTubePlayer implements TimeSource {
   private lastTime = 0;
   private lastTimeAt = 0;
 
-  constructor(private containerId: string, private videoId: string, private bus: EventBus) {}
+  constructor(
+    private containerId: string,
+    private videoId: string,
+    private bus: EventBus
+  ) {}
 
   load(): void {
     if (window.YT && window.YT.Player) {

@@ -5,12 +5,16 @@ export interface Point {
   y: number;
   time?: number;
   pressure?: number;
+  vel?: number;
+  angle?: number;
+  arcLen?: number;
 }
 
 export interface BrushContext {
   tool: ToolConfig;
   pos: Point;
   vel: number;
+  seed: number;
 }
 
 export interface Brush {

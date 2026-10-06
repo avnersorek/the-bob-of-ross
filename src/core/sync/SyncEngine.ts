@@ -91,7 +91,7 @@ export class SyncEngine {
     if (this.state.syncEnabled && this.state.timeToNext <= BOUNDARY_BAND_MS && nextSeg) {
       try {
         this.brushes.forTool(nextSeg.tool).prepare(nextSeg.tool);
-      } catch (e) {
+      } catch {
         // ignore
       }
     }

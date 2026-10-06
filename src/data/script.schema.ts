@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-const TOOL_TYPES = [
-  "liquid_white_base",
-  "sky_wash",
-  "pine_tree_foliage",
-  "mountain_snow",
-] as const;
+const TOOL_TYPES = ["liquid_white_base", "sky_wash", "pine_tree_foliage", "mountain_snow"] as const;
 
 const BLEND_MODES = ["source-over", "multiply", "screen", "lighter"] as const;
 
@@ -40,14 +35,17 @@ export const toolScriptSchema = z
     timeline: z.array(segmentSchema).min(1),
     version: z.number().positive().optional(),
   })
-  .refine((s) => {
-    for (let i = 1; i < s.timeline.length; i++) {
-      if (s.timeline[i]!.startTime < s.timeline[i - 1]!.endTime) {
-        return false;
+  .refine(
+    (s) => {
+      for (let i = 1; i < s.timeline.length; i++) {
+        if (s.timeline[i]!.startTime < s.timeline[i - 1]!.endTime) {
+          return false;
+        }
       }
-    }
-    return true;
-  }, { message: "timeline segments must be ordered and non-overlapping" });
+      return true;
+    },
+    { message: "timeline segments must be ordered and non-overlapping" }
+  );
 
 export type ToolType = (typeof TOOL_TYPES)[number];
 export type BlendMode = (typeof BLEND_MODES)[number];
