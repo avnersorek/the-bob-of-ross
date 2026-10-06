@@ -14,6 +14,7 @@ import { ToolHud } from "./ui/ToolHud";
 import { NowNextPanel } from "./ui/NowNextPanel";
 import { VideoWindow } from "./ui/VideoWindow";
 import { VideoControls } from "./ui/VideoControls";
+import { ToolCompleteToast } from "./ui/ToolCompleteToast";
 
 function defaultTool() {
   return {
@@ -56,6 +57,8 @@ async function init() {
     state.brushEngine = engine;
     new PointerPipeline(canvas, engine);
 
+    new ToolCompleteToast(bus, player);
+
     const syncEngine = new SyncEngine(player, store, bus, state, brushes);
     syncEngine.start();
 
@@ -78,6 +81,10 @@ async function init() {
         state.audioMuted = !state.audioMuted;
         if (state.audioMuted) player.mute();
         else player.unMute();
+      },
+      onTogglePauseAtEnd: () => {
+        state.pauseAtToolEnd = !state.pauseAtToolEnd;
+        bus.emit("toolend:toggle", { enabled: state.pauseAtToolEnd });
       },
     });
     new ToolHud(app, bus, state, fallbackTool);
@@ -162,6 +169,16 @@ async function init() {
       },
       getTool() {
         return state.activeTool;
+      },
+      simulateToolEnd() {
+        const index = state.activeSegmentIndex;
+        const finished = store.segments[index]?.tool ?? null;
+        const next = store.segments[index + 1]?.tool ?? null;
+        bus.emit("tool:end", { index, finished, next });
+        return { finished: finished?.name ?? null, next: next?.name ?? null };
+      },
+      pauseAtToolEndEnabled() {
+        return state.pauseAtToolEnd;
       },
     };
     (window as unknown as { __bob: unknown }).__bob = bob;

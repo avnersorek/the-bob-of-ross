@@ -9,6 +9,7 @@ export class AppState {
   activeTool: ToolConfig | null = null;
   syncEnabled = true;
   audioMuted = false;
+  pauseAtToolEnd = true;
   playerState: PlayerState = "unstarted";
   currentTime = 0;
   timeToNext = 0;

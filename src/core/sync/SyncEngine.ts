@@ -3,6 +3,7 @@ import type { AppState } from "../state/AppState";
 import type { SegmentStore } from "./segmentStore";
 import type { TimeSource } from "./YouTubePlayer";
 import type { BrushFactory } from "../../brush/BrushFactory";
+import { shouldAutoPauseAtBoundary } from "./boundaryPause";
 
 const SYNC_INTERVAL_MS = 250;
 const BOUNDARY_BAND_MS = 400;
@@ -13,6 +14,8 @@ export class SyncEngine {
   private frameDt = 16.67;
   private pendingSeek = false;
   private forceSegmentEmit = false;
+  private seekArmed = false;
+  private lastFiredBoundary: number | null = null;
   private activeIdx = -1;
   private prevTool: any = null;
   private rafId = 0;
@@ -36,6 +39,7 @@ export class SyncEngine {
   seek(_t: number): void {
     this.pendingSeek = true;
     this.forceSegmentEmit = true;
+    this.seekArmed = true;
     this.lastEvalAt = 0;
   }
 
@@ -65,15 +69,16 @@ export class SyncEngine {
     this.lastTime = t;
     this.state.currentTime = t;
 
-    if (
-      this.timeSource.getState() === "playing" &&
-      Math.abs(t - prevT) > Math.max(1.5, 4 * this.frameDt)
-    ) {
+    const jumped = Math.abs(t - prevT) > Math.max(1.5, 4 * this.frameDt);
+    if (this.timeSource.getState() === "playing" && jumped) {
       this.pendingSeek = true;
     }
+    const seekDriven = this.seekArmed || jumped;
+    this.seekArmed = false;
 
     if (this.store.segments.length === 0) return;
 
+    const prevIdx = this.activeIdx;
     const segIdx = this.store.indexAt(t);
     const changed = segIdx !== this.activeIdx || this.forceSegmentEmit;
     this.forceSegmentEmit = false;
@@ -103,6 +108,26 @@ export class SyncEngine {
         segment: activeSegment,
         next: nextSeg,
         timeToNext: this.state.timeToNext,
+      });
+    }
+
+    if (
+      shouldAutoPauseAtBoundary({
+        prevIndex: prevIdx,
+        index: segIdx,
+        prevTime: prevT,
+        time: t,
+        seekDriven,
+        playing: this.timeSource.getState() === "playing",
+        enabled: this.state.pauseAtToolEnd,
+        lastFiredIndex: this.lastFiredBoundary,
+      })
+    ) {
+      this.lastFiredBoundary = segIdx;
+      this.bus.emit("tool:end", {
+        index: segIdx,
+        finished: this.store.segments[prevIdx]?.tool ?? null,
+        next: activeSegment.tool,
       });
     }
 

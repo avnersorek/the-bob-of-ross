@@ -1,5 +1,9 @@
+import type { ToolConfig } from "../../data/script.schema";
+
 type EventMap = {
   "tool:change": { prev: unknown; next: unknown };
+  "tool:end": { index: number; finished: ToolConfig | null; next: ToolConfig | null };
+  "toolend:toggle": { enabled: boolean };
   "segment:change": { index: number; segment: unknown; next: unknown; timeToNext: number };
   "player:state": { state: string };
   "player:seek": { time: number };
