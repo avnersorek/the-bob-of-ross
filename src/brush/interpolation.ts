@@ -13,7 +13,7 @@ function dedupe(points: Point[]): Point[] {
     if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) continue;
     const last = out[out.length - 1];
     if (last && Math.hypot(p.x - last.x, p.y - last.y) < 1e-6) continue;
-    out.push({ x: p.x, y: p.y });
+    out.push(p);
   }
   return out;
 }
@@ -80,7 +80,7 @@ export function smoothPath(points: Point[], samplesPerCurve = 8): Point[] {
   if (pts.length === 2) {
     return pts.slice();
   }
-  const out: Point[] = [{ x: pts[0]!.x, y: pts[0]!.y }];
+  const out: Point[] = [{ x: pts[0]!.x, y: pts[0]!.y, vel: pts[0]!.vel }];
   const n = Math.max(2, Math.floor(samplesPerCurve));
   for (let i = 1; i < pts.length - 1; i++) {
     const p0 = pts[i - 1]!;
@@ -92,14 +92,14 @@ export function smoothPath(points: Point[], samplesPerCurve = 8): Point[] {
       const pt = quadraticMidpointBezier(m01, p1, m12, s / n);
       const last = out[out.length - 1]!;
       if (Math.hypot(pt.x - last.x, pt.y - last.y) >= 1e-6) {
-        out.push(pt);
+        out.push({ x: pt.x, y: pt.y, vel: p1.vel });
       }
     }
   }
   const tail = out[out.length - 1]!;
   const lastRaw = pts[pts.length - 1]!;
   if (Math.hypot(lastRaw.x - tail.x, lastRaw.y - tail.y) >= 1e-6) {
-    out.push({ x: lastRaw.x, y: lastRaw.y });
+    out.push({ x: lastRaw.x, y: lastRaw.y, vel: lastRaw.vel });
   }
   return out;
 }
@@ -107,7 +107,7 @@ export function smoothPath(points: Point[], samplesPerCurve = 8): Point[] {
 export function sampleByArcLength(path: Point[], step: number, fromCount = 0): PathSample[] {
   const pts = dedupe(path);
   if (pts.length < 2 || step <= 0) {
-    return pts.map((p, i) => ({ x: p.x, y: p.y, angle: 0, arcLen: i * step }));
+    return pts.map((p, i) => ({ x: p.x, y: p.y, angle: 0, arcLen: i * step, vel: p.vel }));
   }
 
   const samples: PathSample[] = [];
@@ -117,7 +117,7 @@ export function sampleByArcLength(path: Point[], step: number, fromCount = 0): P
 
   const cur = pts[0]!;
   if (k === 0) {
-    samples.push({ x: cur.x, y: cur.y, angle: 0, arcLen: 0 });
+    samples.push({ x: cur.x, y: cur.y, angle: 0, arcLen: 0, vel: cur.vel });
     k = 1;
   }
 
@@ -129,12 +129,13 @@ export function sampleByArcLength(path: Point[], step: number, fromCount = 0): P
     angle = Math.atan2(p1.y - p0.y, p1.x - p0.x);
     const segStart = walked;
     const segEnd = walked + segLen;
+    const vel = p1.vel ?? p0.vel;
     while (k * step <= segEnd + 1e-9) {
       const target = k * step;
       const t = Math.min(1, Math.max(0, (target - segStart) / segLen));
       const x = p0.x + (p1.x - p0.x) * t;
       const y = p0.y + (p1.y - p0.y) * t;
-      samples.push({ x, y, angle, arcLen: target });
+      samples.push({ x, y, angle, arcLen: target, vel });
       k++;
     }
     walked = segEnd;

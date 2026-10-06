@@ -3,7 +3,7 @@ import type { ToolConfig } from "../data/script.schema";
 import type { RenderTarget } from "../render/Renderer";
 import { BrushFactory } from "./BrushFactory";
 import { Stroke } from "./Stroke";
-import { strokeSpacing } from "./brushCommon";
+import { strokeStepFor } from "./toolProfile";
 
 export type SpawnParticles = (x: number, y: number, color: string, count: number) => void;
 
@@ -58,7 +58,7 @@ export class PaintEngine implements BrushEngine, RenderTarget {
     this.brush = this.factory.forTool(tool);
     this.active = true;
     this.baseCtx.save();
-    this.brush.beginStroke(this.baseCtx, this.strokeContext(p, 0, tool));
+    this.brush.beginStroke(this.baseCtx, this.strokeContext(p, p.vel ?? 0, tool));
     this.flush();
   }
 
@@ -69,7 +69,7 @@ export class PaintEngine implements BrushEngine, RenderTarget {
 
   flush(): void {
     if (!this.active || !this.stroke || !this.brush || !this.strokeTool) return;
-    const step = strokeSpacing(this.strokeTool);
+    const step = strokeStepFor(this.strokeTool, this.baseCtx.canvas.width);
     const samples = this.stroke.resample(step);
     if (samples.length === 0) {
       return;

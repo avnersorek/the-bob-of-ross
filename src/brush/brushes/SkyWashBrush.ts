@@ -1,39 +1,82 @@
 import type { Brush, BrushContext, Point } from "../Brush";
 import type { ToolConfig } from "../../data/script.schema";
 import { flowOf, applyStrokeStyle } from "../brushCommon";
+import {
+  REF_CANVAS_WIDTH,
+  footprintFor,
+  profileFor,
+  strokeAlpha,
+  velocityWidth,
+  type ToolProfile,
+} from "../toolProfile";
 import { getSoftSprite } from "../sprites";
-import { clamp } from "../../util/math";
 
-const V_REF = 8;
-
+/**
+ * sky_wash — the wide soft wash (transcript 3:55 "begin making little X's",
+ * 4:20 "making the crisscross strokes, little X strokes", 17:29 "pull
+ * downward").
+ *
+ * A single stamp is a big gaussian ellipse rotated alternately either side of
+ * the direction of travel, so a drag paints overlapping X's rather than one
+ * thin line; alpha is low-to-moderate and drops further with pointer speed,
+ * which is what makes the 17:29 downward pull read as a soft streak.
+ */
 export class SkyWashBrush implements Brush {
   private tool: ToolConfig | null = null;
+  private profile: ToolProfile | null = null;
   private radius = 0;
+  private arc = 0;
 
   prepare(tool: ToolConfig): void {
     if (tool.opacity === 0) return;
-    getSoftSprite(tool.color, tool.size * 1.4, "gaussian");
+    getSoftSprite(tool.color, footprintFor(tool, REF_CANVAS_WIDTH) / 2, profileFor(tool).falloff);
   }
 
   beginStroke(ctx: CanvasRenderingContext2D, context: BrushContext): void {
-    const { tool, pos } = context;
+    const { tool, pos, vel } = context;
     if (tool.opacity === 0) return;
     this.tool = tool;
-    this.radius = tool.size * 1.4;
+    this.profile = profileFor(tool);
+    this.radius = footprintFor(tool, ctx.canvas.width) / 2;
+    this.arc = 0;
     applyStrokeStyle(ctx, tool);
-    const alpha = tool.opacity * flowOf(tool) * 1;
-    this.stamp(ctx, pos.x, pos.y, 0, alpha, 0);
+    this.stamp(
+      ctx,
+      pos.x,
+      pos.y,
+      pos.angle ?? 0,
+      this.alphaFor(tool, this.profile, vel),
+      velocityWidth(this.profile, vel)
+    );
   }
 
   extendStroke(ctx: CanvasRenderingContext2D, points: Point[]): void {
     const tool = this.tool;
-    if (!tool) return;
+    const profile = this.profile;
+    if (!tool || !profile) return;
     for (const p of points) {
-      const v = p.vel ?? 0;
-      const density = clamp(1 - (v / V_REF) * 0.6, 0.2, 1);
-      const alpha = tool.opacity * flowOf(tool) * density;
-      this.stamp(ctx, p.x, p.y, p.angle ?? 0, alpha, p.arcLen ?? 0);
+      const arc = p.arcLen ?? this.arc;
+      const theta = (p.angle ?? 0) + this.crossTilt(arc);
+      this.stamp(
+        ctx,
+        p.x,
+        p.y,
+        theta,
+        this.alphaFor(tool, profile, p.vel ?? 0),
+        velocityWidth(profile, p.vel ?? 0)
+      );
+      this.arc = arc;
     }
+  }
+
+  private alphaFor(tool: ToolConfig, profile: ToolProfile, vel: number): number {
+    return strokeAlpha(profile, tool, vel) * flowOf(tool);
+  }
+
+  /** Alternating tilt → Bob's "little X's" instead of a single flat band. */
+  private crossTilt(arc: number): number {
+    const period = Math.max(1, this.radius * 2);
+    return 0.5 * Math.sign(Math.sin((arc / period) * Math.PI * 2));
   }
 
   private stamp(
@@ -42,20 +85,20 @@ export class SkyWashBrush implements Brush {
     y: number,
     theta: number,
     alpha: number,
-    arc: number
+    widthFactor: number
   ): void {
-    const sprite = getSoftSprite(this.tool!.color, this.radius, "gaussian");
-    const wobble = Math.sin(arc * 0.08) * 0.12;
+    const sprite = getSoftSprite(this.tool!.color, this.radius, this.profile!.falloff);
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.translate(x, y);
-    ctx.rotate(theta + wobble);
-    ctx.scale(1.35, 0.82);
+    ctx.rotate(theta);
+    ctx.scale(1, 0.62 * widthFactor);
     ctx.drawImage(sprite, -this.radius, -this.radius, this.radius * 2, this.radius * 2);
     ctx.restore();
   }
 
   endStroke(): void {
     this.tool = null;
+    this.profile = null;
   }
 }

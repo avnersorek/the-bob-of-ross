@@ -1,4 +1,5 @@
 import type { ToolConfig } from "../data/script.schema";
+import { footprintFor } from "../brush/toolProfile";
 
 export class CursorRenderer {
   render(
@@ -13,7 +14,9 @@ export class CursorRenderer {
     ctx.strokeStyle = active ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.65)";
     ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
     ctx.lineWidth = 1.5;
-    const s = tool.size;
+    // The cursor shows the real on-canvas footprint (toolProfile), not the raw
+    // scripted size, so what the user aims with is what paints.
+    const s = footprintFor(tool, ctx.canvas.width);
     const name = (tool.name || "").toLowerCase();
 
     let shape: "rect" | "fan" | "blade" | "foliage";
