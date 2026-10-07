@@ -9,6 +9,8 @@ export type SpawnParticles = (x: number, y: number, color: string, count: number
 
 export class PaintEngine implements BrushEngine, RenderTarget {
   hover: { x: number; y: number } | null = null;
+  // True once paint has been drawn since the last clear(). Intentionally NOT
+  // reset by endStroke(): a finished stroke still means the base has paint.
   painted = false;
   private tool: ToolConfig | null = null;
   private paintTool: ToolConfig | null = null;
@@ -33,8 +35,8 @@ export class PaintEngine implements BrushEngine, RenderTarget {
   }
 
   private resolve(t: ToolConfig | null): ToolConfig | null {
-    if (t && t.opacity > 0) return t;
-    return this.fallback;
+    if (!t) return this.fallback;
+    return t;
   }
 
   setTool(tool: ToolConfig | null): void {
@@ -51,7 +53,7 @@ export class PaintEngine implements BrushEngine, RenderTarget {
   beginStroke(p: Point): void {
     if (this.active) this.endStroke();
     const tool = this.resolve(this.tool);
-    if (!tool) return;
+    if (!tool || tool.opacity === 0) return;
     this.paintTool = tool;
     this.strokeTool = tool;
     this.stroke = new Stroke(Math.floor(Math.random() * 0xffffffff));
@@ -69,6 +71,7 @@ export class PaintEngine implements BrushEngine, RenderTarget {
 
   flush(): void {
     if (!this.active || !this.stroke || !this.brush || !this.strokeTool) return;
+    if (this.strokeTool.opacity === 0) return;
     const step = strokeStepFor(this.strokeTool, this.baseCtx.canvas.width);
     const samples = this.stroke.resample(step);
     if (samples.length === 0) {
@@ -101,6 +104,7 @@ export class PaintEngine implements BrushEngine, RenderTarget {
       this.brush = null;
       this.strokeTool = null;
     }
+    this.painted = false;
   }
 
   setHover(p: Point | null): void {

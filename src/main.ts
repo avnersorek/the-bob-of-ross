@@ -1,5 +1,6 @@
 import "./style.css";
 import { loadScript } from "./core/sync/scriptLoader";
+import type { ToolScript } from "./data/script.schema";
 import { SegmentStore } from "./core/sync/segmentStore";
 import { YouTubePlayer } from "./core/sync/YouTubePlayer";
 import { SyncEngine } from "./core/sync/SyncEngine";
@@ -35,7 +36,22 @@ async function init() {
   const renderer = new Renderer(canvas);
 
   try {
-    const script = loadScript();
+    let script: ToolScript;
+    try {
+      script = loadScript();
+    } catch (scriptErr) {
+      console.error(scriptErr);
+      const toast = document.getElementById("toast-container");
+      if (toast) {
+        toast.textContent = "Script failed to load — using a neutral fallback tool.";
+        toast.setAttribute("role", "alert");
+      }
+      script = {
+        videoId: "",
+        title: "Script unavailable",
+        timeline: [{ startTime: 0, endTime: 1e9, tool: defaultTool() }],
+      };
+    }
     const store = new SegmentStore(script);
     const brushes = new BrushFactory();
 
@@ -118,8 +134,10 @@ async function init() {
       }
       if (engine.painted) {
         state.baseHasPaint = true;
+        renderer.noteBaseDirty();
       }
       engine.flush();
+      syncEngine.tick();
       renderer.render(state, engine);
       requestAnimationFrame(loop);
     }
@@ -209,6 +227,11 @@ async function init() {
     }
   } catch (e) {
     console.error(e);
+    const toast = document.getElementById("toast-container");
+    if (toast) {
+      toast.textContent = "Failed to load script";
+      toast.setAttribute("role", "alert");
+    }
     bus.emit("script:error", { message: "Failed to load script" });
   }
 }

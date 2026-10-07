@@ -16,7 +16,7 @@ export class Compositor {
     return this.base.height;
   }
 
-  ensureSize(cssW: number, cssH: number, dpr: number): void {
+  ensureSize(cssW: number, cssH: number, dpr: number, bgColor?: string): void {
     const w = Math.max(2, Math.round(cssW * dpr));
     const h = Math.max(2, Math.round(cssH * dpr));
     if (w === this.base.width && h === this.base.height) return;
@@ -29,8 +29,11 @@ export class Compositor {
     this.base.width = w;
     this.base.height = h;
     this.baseCtx.setTransform(1, 0, 0, 1, 0, 0);
+    if (bgColor) {
+      this.fillBg(bgColor);
+    }
     if (old && old.width > 0) {
-      this.baseCtx.drawImage(old, 0, 0);
+      this.baseCtx.drawImage(old, 0, 0, w, h);
     }
     this.initialized = true;
   }

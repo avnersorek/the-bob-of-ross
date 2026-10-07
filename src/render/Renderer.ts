@@ -20,11 +20,28 @@ export class Renderer {
   private cssH = 0;
   private dpr = 1;
   private last = 0;
+  private baseDirty = true;
+  private hasRendered = false;
+  private lastHoverKey = "";
+  private lastParticleAt = -Infinity;
+  private resizeRaf = 0;
+
+  noteBaseDirty(): void {
+    this.baseDirty = true;
+  }
 
   constructor(private canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext("2d")!;
     this.resize();
-    window.addEventListener("resize", () => this.resize());
+    window.addEventListener("resize", () => this.scheduleResize());
+  }
+
+  private scheduleResize(): void {
+    if (this.resizeRaf !== 0) return;
+    this.resizeRaf = requestAnimationFrame(() => {
+      this.resizeRaf = 0;
+      this.resize();
+    });
   }
 
   get width(): number {
@@ -44,7 +61,8 @@ export class Renderer {
     this.canvas.width = Math.round(this.cssW * this.dpr);
     this.canvas.height = Math.round(this.cssH * this.dpr);
     const wasEmpty = this.compositor.needsInitialFill;
-    this.compositor.ensureSize(this.cssW, this.cssH, this.dpr);
+    this.compositor.ensureSize(this.cssW, this.cssH, this.dpr, Renderer.CANVAS_BG);
+    this.baseDirty = true;
     if (wasEmpty) {
       this.compositor.fillBg(Renderer.CANVAS_BG);
     }
@@ -60,10 +78,22 @@ export class Renderer {
 
   spawnParticles(x: number, y: number, color: string, count: number): void {
     this.particles.spawn(x, y, color, count);
+    this.lastParticleAt = performance.now();
+    this.last = this.lastParticleAt;
   }
 
   render(state: AppState, target: RenderTarget): void {
     const now = performance.now();
+    const tool = target.getPaintTool() ?? state.activeTool;
+    const hover = target.hover;
+    const hoverKey = hover ? `${hover.x},${hover.y},${target.isActive()},${tool ? tool.color + tool.size : ""}` : "";
+    const particlesLive = now - this.lastParticleAt < 2000;
+    if (this.hasRendered && !this.baseDirty && !particlesLive && hoverKey === this.lastHoverKey) {
+      return;
+    }
+    this.lastHoverKey = hoverKey;
+    this.baseDirty = false;
+    this.hasRendered = true;
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.globalAlpha = 1;
     this.ctx.globalCompositeOperation = "source-over";
@@ -75,8 +105,6 @@ export class Renderer {
     this.last = now;
     this.particles.render(this.ctx);
 
-    const tool = target.getPaintTool() ?? state.activeTool;
-    const hover = target.hover;
     if (hover && tool) {
       this.cursor.render(this.ctx, hover.x, hover.y, tool, target.isActive());
     }
@@ -85,6 +113,8 @@ export class Renderer {
   clear(): void {
     this.compositor.fillBg(Renderer.CANVAS_BG);
     this.particles.clear();
+    this.baseDirty = true;
+    this.lastParticleAt = -Infinity;
   }
 
   toDataURL(type = "image/png"): string {

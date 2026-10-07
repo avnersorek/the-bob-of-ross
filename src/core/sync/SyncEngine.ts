@@ -11,14 +11,14 @@ const BOUNDARY_BAND_MS = 400;
 export class SyncEngine {
   private lastEvalAt = 0;
   private lastTime = 0;
-  private frameDt = 16.67;
+  private frameDt = 16.67 / 1000;
+  private lastTickAt = 0;
   private pendingSeek = false;
   private forceSegmentEmit = false;
   private seekArmed = false;
   private lastFiredBoundary: number | null = null;
   private activeIdx = -1;
   private prevTool: any = null;
-  private rafId = 0;
 
   constructor(
     private timeSource: TimeSource,
@@ -28,13 +28,9 @@ export class SyncEngine {
     private brushes: BrushFactory
   ) {}
 
-  start(): void {
-    this.tick();
-  }
+  start(): void {}
 
-  stop(): void {
-    cancelAnimationFrame(this.rafId);
-  }
+  stop(): void {}
 
   seek(_t: number): void {
     this.pendingSeek = true;
@@ -43,11 +39,13 @@ export class SyncEngine {
     this.lastEvalAt = 0;
   }
 
-  private tick = (): void => {
-    if (typeof requestAnimationFrame !== "undefined") {
-      this.rafId = requestAnimationFrame(this.tick);
-    }
+  tick(): void {
     const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+    if (this.lastTickAt > 0 && now > this.lastTickAt) {
+      this.frameDt = Math.min(Math.max((now - this.lastTickAt) / 1000, 0.001), 0.25);
+    }
+    this.lastTickAt = now;
+
     const shouldEval =
       this.pendingSeek ||
       now - this.lastEvalAt >= SYNC_INTERVAL_MS ||
@@ -56,7 +54,7 @@ export class SyncEngine {
     if (!shouldEval) return;
 
     this.evaluateNow();
-  };
+  }
 
   evaluateNow(): void {
     this.pendingSeek = false;

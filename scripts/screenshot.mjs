@@ -34,6 +34,7 @@ const opt = {
   width: 1600,
   height: 1000,
   wait: 4000,
+  setup: null,
   clicks: [],
   drags: [],
   evals: [],
@@ -47,6 +48,7 @@ for (let i = 0; i < argv.length; i++) {
   else if (a === '--width') opt.width = Number(argv[++i]);
   else if (a === '--height') opt.height = Number(argv[++i]);
   else if (a === '--wait') opt.wait = Number(argv[++i]);
+  else if (a === '--setup') opt.setup = argv[++i];
   else if (a === '--click') opt.clicks.push(argv[++i]);
   else if (a === '--drag') { const [x1, y1, x2, y2] = argv[++i].split(',').map(Number); opt.drags.push([x1, y1, x2, y2]); }
   else if (a === '--eval') opt.evals.push(argv[++i]);
@@ -108,6 +110,8 @@ try {
     try { evals.push({ code, result: await page.evaluate(code) }); }
     catch (e) { evals.push({ code, error: String(e).slice(0, 200) }); }
   }
+
+  if (opt.setup) { try { await page.evaluate(opt.setup); await sleep(300); } catch (e) { events.push({ type: 'setup-error', text: String(e).slice(0, 200) }); } }
 
   const beforeStats = await page.evaluate(canvasStatsFn);
 

@@ -6,7 +6,8 @@ export const STROKE_MAX_POINTS = 2048;
 export class Stroke {
   readonly points: Point[] = [];
   readonly seed: number;
-  private emittedCount = 0;
+  private emittedArcLen = -1;
+  private droppedArcLen = 0;
   private smoothingCache: Point[] | null = null;
 
   constructor(seed: number) {
@@ -39,7 +40,11 @@ export class Stroke {
     }
     this.points.push({ ...point });
     if (this.points.length > STROKE_MAX_POINTS) {
-      this.points.shift();
+      const dropped = this.points.shift()!;
+      const next = this.points[0];
+      if (next) {
+        this.droppedArcLen += Math.hypot(next.x - dropped.x, next.y - dropped.y);
+      }
     }
     this.smoothingCache = null;
   }
@@ -53,9 +58,12 @@ export class Stroke {
 
   resample(step: number): PathSample[] {
     if (step <= 0 || this.points.length < 2) return [];
-    const base = this.emittedCount;
-    const samples = sampleByArcLength(this.smoothed(), step, base);
-    this.emittedCount = base + samples.length;
+    const fromCount =
+      this.emittedArcLen < 0 ? 0 : Math.floor(this.emittedArcLen / step) + 1;
+    const samples = sampleByArcLength(this.smoothed(), step, fromCount, this.droppedArcLen);
+    if (samples.length > 0) {
+      this.emittedArcLen = samples[samples.length - 1]!.arcLen;
+    }
     return samples;
   }
 }

@@ -9,10 +9,10 @@ export const toolConfigSchema = z.object({
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "must be a 6-digit hex color"),
   type: z.enum(TOOL_TYPES),
   opacity: z.number().min(0).max(1),
-  size: z.number().positive(),
+  size: z.number().positive().max(500),
   blendMode: z.enum(BLEND_MODES),
   breakTexture: z.boolean().optional(),
-  spacing: z.number().positive().optional(),
+  spacing: z.number().positive().max(500).optional(),
   flow: z.number().min(0).max(1).optional(),
 });
 

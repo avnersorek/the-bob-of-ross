@@ -44,4 +44,22 @@ describe("Stroke", () => {
     }
     expect(first[0]!.arcLen).toBe(0);
   });
+
+  it("keeps emitting uniformly spaced samples past the point cap", () => {
+    const stroke = new Stroke(4);
+    const step = 4;
+    const all: { x: number; y: number; arcLen: number }[] = [];
+    for (let i = 0; i <= 3000; i++) {
+      stroke.add(pt(i * 2, 0, i));
+      if (i % 50 === 0) all.push(...stroke.resample(step));
+    }
+    expect(all.length).toBeGreaterThan(1000);
+    for (let i = 1; i < all.length; i++) {
+      expect(all[i]!.arcLen - all[i - 1]!.arcLen).toBeCloseTo(step, 6);
+      const d = Math.hypot(all[i]!.x - all[i - 1]!.x, all[i]!.y - all[i - 1]!.y);
+      expect(d).toBeGreaterThan(0);
+      expect(d).toBeLessThanOrEqual(step + 1e-6);
+    }
+    expect(all[all.length - 1]!.arcLen).toBeGreaterThan(3000 * 2 * 0.9);
+  });
 });

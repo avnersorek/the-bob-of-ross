@@ -104,10 +104,15 @@ export function smoothPath(points: Point[], samplesPerCurve = 8): Point[] {
   return out;
 }
 
-export function sampleByArcLength(path: Point[], step: number, fromCount = 0): PathSample[] {
+export function sampleByArcLength(
+  path: Point[],
+  step: number,
+  fromCount = 0,
+  offsetArc = 0
+): PathSample[] {
   const pts = dedupe(path);
   if (pts.length < 2 || step <= 0) {
-    return pts.map((p, i) => ({ x: p.x, y: p.y, angle: 0, arcLen: i * step, vel: p.vel }));
+    return pts.map((p, i) => ({ x: p.x, y: p.y, angle: 0, arcLen: offsetArc + i * step, vel: p.vel }));
   }
 
   const samples: PathSample[] = [];
@@ -116,7 +121,7 @@ export function sampleByArcLength(path: Point[], step: number, fromCount = 0): P
   let angle = 0;
 
   const cur = pts[0]!;
-  if (k === 0) {
+  if (k === 0 && offsetArc <= 0) {
     samples.push({ x: cur.x, y: cur.y, angle: 0, arcLen: 0, vel: cur.vel });
     k = 1;
   }
@@ -130,12 +135,14 @@ export function sampleByArcLength(path: Point[], step: number, fromCount = 0): P
     const segStart = walked;
     const segEnd = walked + segLen;
     const vel = p1.vel ?? p0.vel;
-    while (k * step <= segEnd + 1e-9) {
-      const target = k * step;
-      const t = Math.min(1, Math.max(0, (target - segStart) / segLen));
-      const x = p0.x + (p1.x - p0.x) * t;
-      const y = p0.y + (p1.y - p0.y) * t;
-      samples.push({ x, y, angle, arcLen: target, vel });
+    while (k * step - offsetArc <= segEnd + 1e-9) {
+      const target = k * step - offsetArc;
+      if (target >= 0) {
+        const t = Math.min(1, Math.max(0, (target - segStart) / segLen));
+        const x = p0.x + (p1.x - p0.x) * t;
+        const y = p0.y + (p1.y - p0.y) * t;
+        samples.push({ x, y, angle, arcLen: k * step, vel });
+      }
       k++;
     }
     walked = segEnd;

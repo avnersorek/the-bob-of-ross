@@ -149,11 +149,23 @@ describe("PaintEngine", () => {
     expect(engine.getPaintTool()).toBe(fallback);
   });
 
-  it("resolves a paintable tool when the active tool has zero opacity", () => {
-    const { engine, fallback } = engineWithCanvas();
+  it("keeps a zero-opacity tool instead of substituting the fallback", () => {
+    const { engine } = engineWithCanvas();
     const noPaint = makeTool({ opacity: 0 });
     engine.setTool(noPaint);
-    expect(engine.getPaintTool()).toBe(fallback);
+    expect(engine.getPaintTool()).toBe(noPaint);
+  });
+
+  it("does not paint when stroking with a zero-opacity tool", () => {
+    const { canvas, engine } = engineWithCanvas();
+    engine.setTool(makeTool({ size: 30, opacity: 0 }));
+    engine.beginStroke({ x: 60, y: 100, time: 0 });
+    for (let i = 1; i <= 12; i++) {
+      engine.move({ x: 60 + i * 6, y: 100, time: i * 16.6667 });
+    }
+    engine.endStroke();
+    expect(engine.painted).toBe(false);
+    expect(countChanged(canvas, BG)).toBe(0);
   });
 
   it("keeps the scripted tool when it is paintable", () => {

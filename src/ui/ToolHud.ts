@@ -9,7 +9,7 @@ export class ToolHud {
     _container: HTMLElement,
     bus: EventBus,
     private state: AppState,
-    private fallback: ToolConfig
+    _fallback: ToolConfig
   ) {
     this.element = document.getElementById("tool-hud") as HTMLDivElement;
     this.element.classList.remove("hidden");
@@ -22,9 +22,7 @@ export class ToolHud {
   }
 
   private liveTool(): ToolConfig | null {
-    const tool = this.state.activeTool;
-    if (tool && tool.opacity > 0) return tool;
-    return this.fallback;
+    return this.state.activeTool;
   }
 
   update(): void {
