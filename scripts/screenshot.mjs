@@ -105,12 +105,6 @@ try {
     catch (e) { events.push({ type: 'click-error', text: `${sel}: ${String(e).slice(0, 200)}` }); }
   }
 
-  const evals = [];
-  for (const code of opt.evals) {
-    try { evals.push({ code, result: await page.evaluate(code) }); }
-    catch (e) { evals.push({ code, error: String(e).slice(0, 200) }); }
-  }
-
   if (opt.setup) { try { await page.evaluate(opt.setup); await sleep(300); } catch (e) { events.push({ type: 'setup-error', text: String(e).slice(0, 200) }); } }
 
   const beforeStats = await page.evaluate(canvasStatsFn);
@@ -130,6 +124,12 @@ try {
   }
 
   const afterStats = await page.evaluate(canvasStatsFn);
+
+  const evals = [];
+  for (const code of opt.evals) {
+    try { evals.push({ code, result: await page.evaluate(code) }); }
+    catch (e) { evals.push({ code, error: String(e).slice(0, 200) }); }
+  }
 
   const dom = await page.evaluate(() => {
     const canvas = document.querySelector('canvas');
